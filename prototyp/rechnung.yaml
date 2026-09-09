@@ -1,0 +1,57 @@
+# Beispielrechnung – Kleinunternehmer liefert Honig an famila (Markant). Alle Verkäuferdaten sind fiktiv.
+nummer: "1"
+datum: 2024-07-08
+leistungsdatum: 2024-07-08
+faelligkeit: 2024-07-22
+waehrung: EUR
+
+ust_satz: 0
+kleinunternehmer: true       # "Gemäß §19 UStG wird keine Umsatzsteuer berechnet"
+
+verkaeufer:
+  name: Imkerei Muster
+  strasse: Musterweg 1
+  plz: "12345"
+  ort: Musterstadt
+  land: DE
+  gln: "4000001000005"       # Pseudo-GLN / Partnernummer, 13-stellig mit gültiger GS1-Prüfziffer
+  steuernummer: "12/345/67890"
+  ust_id: ""
+  rala_nummer: "4000001000005"   # Markant-Partnernummer – falls abweichend von der Pseudo-GLN, hier ändern
+  iban: DE02120300000000202051    # Test-IBAN
+  bic: BYLADEM1001
+  kontoinhaber: Max Muster
+
+kaeufer:
+  name: Famila Handelsmarkt Neumünster GmbH & Co. KG   # exakt laut Markant-Stammdaten
+  strasse: Alte Weide 7-13
+  plz: "24116"
+  ort: Kiel
+  land: DE
+  gln: "4304525000009"
+
+lieferort:
+  name: famila Rendsburg
+  strasse: Friedrichstädter Str. 4
+  plz: "24768"
+  ort: Rendsburg
+  land: DE
+  gln: "4331586000006"
+
+bestellnummer: ""         # bei Markant optional
+lieferscheinnummer: "20"
+kaeufer_referenz: ""
+
+positionen:
+  - beschreibung: Rapshonig 500g
+    artikelnummer: "100001"
+    gtin: ""
+    menge: 52
+    einheit: H87
+    einzelpreis: 5.00
+  - beschreibung: Blütenhonig 500g
+    artikelnummer: "100002"
+    gtin: ""
+    menge: 20
+    einheit: H87
+    einzelpreis: 5.00

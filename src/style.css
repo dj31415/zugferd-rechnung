@@ -1,0 +1,60 @@
+:root {
+  --bg: #f6f5f2; --paper: #fff; --ink: #1d1d1b; --muted: #6b6b66; --line: #d9d7d0;
+  --accent: #1f5f3f; --accent-ink: #fff; --error: #b3261e; --warn: #9a6700; --ok: #1f5f3f;
+  --radius: 6px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: 15px; line-height: 1.4;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1b1b19; --paper: #24241f; --ink: #ecebe6; --muted: #a2a19a; --line: #3b3b35; --accent: #67b48a; --accent-ink: #10241a; --error: #f28b82; --warn: #e2b93b; --ok: #67b48a; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); }
+a { color: var(--accent); }
+h1 { margin: 0 0 .2rem; font-size: 1.6rem; }
+h2 { margin: 0 0 .6rem; font-size: 1rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.sub, .hint, small { color: var(--muted); }
+.hint { margin: 0 0 .8rem; font-size: .9rem; }
+small { display: block; font-size: .8rem; margin-top: .15rem; }
+.top, .layout, .foot { max-width: 1180px; margin: 0 auto; padding: 1.2rem 1rem; }
+.top { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: flex-start; }
+.tools { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 1.2rem; align-items: start; padding-top: 0; }
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } .side { position: static; } }
+.side { position: sticky; top: 1rem; display: grid; gap: 1rem; }
+fieldset, .card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.2rem; margin: 0 0 1rem; }
+legend { font-weight: 600; padding: 0 .4rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .7rem 1rem; }
+label { display: flex; flex-direction: column; gap: .25rem; font-size: .9rem; }
+label.wide { grid-column: span 2; }
+label.check { flex-direction: row; align-items: center; gap: .5rem; grid-column: 1 / -1; }
+label.check input { width: auto; }
+input, select { font: inherit; padding: .45rem .55rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); color: var(--ink); width: 100%; }
+input.short { max-width: 8rem; }
+input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+input.invalid { border-color: var(--error); }
+.req { color: var(--error); }
+button, .button { font: inherit; padding: .5rem .9rem; border-radius: var(--radius); border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; width: 100%; padding: .7rem; }
+button.primary:disabled { opacity: .5; cursor: not-allowed; }
+button.ghost:hover, .button:hover { border-color: var(--accent); }
+button.danger { color: var(--error); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 760px; }
+th, td { text-align: left; padding: .3rem .3rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+th { font-weight: 600; color: var(--muted); font-size: .8rem; }
+td input { padding: .35rem .45rem; }
+td.num, th.num { text-align: right; }
+td.total { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+td .remove { padding: .2rem .5rem; }
+#add-line { margin-top: .7rem; }
+dl { display: grid; grid-template-columns: 1fr auto; gap: .3rem 1rem; margin: 0; font-variant-numeric: tabular-nums; }
+dd { margin: 0; text-align: right; }
+dl .gross { font-weight: 700; }
+.findings { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; font-size: .88rem; }
+.findings li { padding: .35rem .5rem; border-radius: var(--radius); border-left: 3px solid; cursor: pointer; }
+.findings li.error { border-color: var(--error); background: color-mix(in srgb, var(--error) 8%, transparent); }
+.findings li.warning { border-color: var(--warn); background: color-mix(in srgb, var(--warn) 10%, transparent); }
+.findings li.ok { border-color: var(--ok); color: var(--ok); cursor: default; }
+.actions { display: grid; gap: .6rem; }
+.status { margin: 0; font-size: .9rem; min-height: 1.2em; }
+.status.error { color: var(--error); }
+.foot { font-size: .85rem; color: var(--muted); }

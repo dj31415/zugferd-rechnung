@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZUGFeRD-Rechnung erstellen</title>
+  <meta name="description" content="E-Rechnung (ZUGFeRD / Factur-X EN 16931) direkt im Browser erzeugen – inklusive GLN-Felder für Markant. Keine Daten verlassen den Rechner.">
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>ZUGFeRD-Rechnung</h1>
+      <p class="sub">E-Rechnung nach EN 16931 (Factur-X, PDF/A-3) für Handelszentralen wie Markant. Alles läuft in deinem Browser, es werden keine Daten übertragen.</p>
+    </div>
+    <nav class="tools">
+      <button type="button" id="load-sample" class="ghost">Beispiel laden</button>
+      <button type="button" id="export-json" class="ghost">Daten sichern (JSON)</button>
+      <label class="ghost button">Daten laden (JSON)<input type="file" id="import-json" accept="application/json,.json" hidden></label>
+      <button type="button" id="reset" class="ghost danger">Alles löschen</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <form id="form" autocomplete="off" novalidate>
+      <fieldset>
+        <legend>Rechnung</legend>
+        <div class="grid">
+          <label><span>Rechnungsnummer <span class="req">*</span></span><input data-path="nummer" required></label>
+          <label><span>Rechnungsdatum <span class="req">*</span></span><input type="date" data-path="datum" required></label>
+          <label>Leistungs-/Lieferdatum <input type="date" data-path="leistungsdatum"><small>leer = Rechnungsdatum</small></label>
+          <label><span>Fällig am <span class="req">*</span></span><input type="date" data-path="faelligkeit" required></label>
+          <label>Lieferscheinnummer <input data-path="lieferscheinnummer"><small>Markant prüft sie</small></label>
+          <label>Bestellnummer <input data-path="bestellnummer"><small>optional</small></label>
+          <label>Kundenreferenz <input data-path="kaeuferReferenz"><small>optional (BT-10)</small></label>
+          <label>Währung <input data-path="waehrung" maxlength="3" class="short"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Umsatzsteuer</legend>
+        <div class="grid">
+          <label class="check"><input type="checkbox" data-path="kleinunternehmer"> Kleinunternehmer nach § 19 UStG (keine USt)</label>
+          <label>USt-Satz <select data-path="ustSatz"><option value="7">7 % (ermäßigt, z. B. Lebensmittel)</option><option value="19">19 % (Regelsatz)</option></select></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Verkäufer (du)</legend>
+        <div class="grid">
+          <label class="wide"><span>Name / Firma <span class="req">*</span></span><input data-path="verkaeufer.name" required></label>
+          <label class="wide"><span>Straße und Hausnummer <span class="req">*</span></span><input data-path="verkaeufer.strasse" required></label>
+          <label><span>PLZ <span class="req">*</span></span><input data-path="verkaeufer.plz" required class="short"></label>
+          <label><span>Ort <span class="req">*</span></span><input data-path="verkaeufer.ort" required></label>
+          <label>Land <input data-path="verkaeufer.land" maxlength="2" class="short"></label>
+          <label><span>GLN <span class="req">*</span></span><input data-path="verkaeufer.gln" inputmode="numeric" pattern="\d{13}" required><small>13 Ziffern, ggf. Pseudo-GLN von Markant</small></label>
+          <label>Partnernummer (RALA) <input data-path="verkaeufer.ralaNummer"><small>meist gleich der GLN</small></label>
+          <label>Steuernummer <input data-path="verkaeufer.steuernummer"><small>Steuernummer oder USt-IdNr. ist Pflicht</small></label>
+          <label>USt-IdNr. <input data-path="verkaeufer.ustId" placeholder="DE123456789"></label>
+          <label class="wide"><span>IBAN <span class="req">*</span></span><input data-path="verkaeufer.iban" required></label>
+          <label>BIC <input data-path="verkaeufer.bic"></label>
+          <label>Kontoinhaber <input data-path="verkaeufer.kontoinhaber"><small>leer = Name</small></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Rechnungsempfänger</legend>
+        <p class="hint">Bei Markant: Name und Straße exakt wie in den Markant-Stammdaten, sonst Fehler BR-MARKANT-RALA-02.</p>
+        <div class="grid">
+          <label class="wide"><span>Name / Firma <span class="req">*</span></span><input data-path="kaeufer.name" required></label>
+          <label class="wide"><span>Straße und Hausnummer <span class="req">*</span></span><input data-path="kaeufer.strasse" required></label>
+          <label><span>PLZ <span class="req">*</span></span><input data-path="kaeufer.plz" required class="short"></label>
+          <label><span>Ort <span class="req">*</span></span><input data-path="kaeufer.ort" required></label>
+          <label>Land <input data-path="kaeufer.land" maxlength="2" class="short"></label>
+          <label><span>GLN <span class="req">*</span></span><input data-path="kaeufer.gln" inputmode="numeric" required></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Lieferanschrift (belieferter Markt)</legend>
+        <p class="hint">Leer lassen, wenn Lieferung an den Rechnungsempfänger. Markant erwartet hier die GLN des Marktes.</p>
+        <div class="grid">
+          <label class="wide">Name <input data-path="lieferort.name"></label>
+          <label class="wide">Straße und Hausnummer <input data-path="lieferort.strasse"></label>
+          <label>PLZ <input data-path="lieferort.plz" class="short"></label>
+          <label>Ort <input data-path="lieferort.ort"></label>
+          <label>Land <input data-path="lieferort.land" maxlength="2" class="short"></label>
+          <label>GLN <input data-path="lieferort.gln" inputmode="numeric"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Positionen</legend>
+        <div class="table-wrap">
+          <table id="lines">
+            <thead><tr><th>#</th><th>Beschreibung <span class="req">*</span></th><th>Art.-Nr. (Händler)</th><th>GTIN/EAN</th><th>Menge <span class="req">*</span></th><th>Einheit</th><th>Einzelpreis € <span class="req">*</span></th><th>Gesamt €</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="button" id="add-line" class="ghost">+ Position</button>
+      </fieldset>
+    </form>
+
+    <aside class="side">
+      <section class="card">
+        <h2>Summe</h2>
+        <dl id="summary"></dl>
+      </section>
+      <section class="card">
+        <h2>Prüfung</h2>
+        <ul id="findings" class="findings"></ul>
+      </section>
+      <section class="card actions">
+        <button type="button" id="make-pdf" class="primary">PDF erzeugen</button>
+        <button type="button" id="make-xml" class="ghost">Nur XML herunterladen</button>
+        <p id="status" class="status" role="status"></p>
+        <p class="hint">Danach das PDF bei <a href="https://valitool.org" target="_blank" rel="noopener">valitool.org</a> mit dem Profil des Empfängers (z. B. Markant-Goods) prüfen. PDF und XML für die Aufbewahrung (GoBD) speichern.</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <p>Open Source · <a href="https://github.com/" id="repo-link">Quellcode</a> · Erzeugt PDF/A-3b mit eingebetteter factur-x.xml (Profil EN 16931). Ohne Gewähr, keine Steuerberatung.</p>
+  </footer>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
